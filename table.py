@@ -3,7 +3,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-def refresh_sgp():
+def refresh_result_sgp():
     url = "https://tabelpakde.com/"
     r = requests.get(url)
     data = BeautifulSoup(r.content, "html5lib")
@@ -26,7 +26,7 @@ def refresh_sgp():
 
     return result
 
-def refresh_hk():
+def refresh_result_hk():
     url = "https://tabelpakde.com/data-hk/"
     r = requests.get(url)
     data = BeautifulSoup(r.content, "html5lib")
@@ -44,4 +44,131 @@ def refresh_hk():
     for i,x in enumerate(periode):
         result['data_'+str(i)] = [tgl[i], periode[i], numball[i]]
 
+    return result
+
+def refresh_livedraw_sgp():
+    url = "https://tabelpakde.com/live-draw-sgp/"
+    r = requests.get(url)
+    data = BeautifulSoup(r.content, "html5lib")
+    value = []
+    tgl = []
+    for x in data.find_all("td", {"class":"box-value"}):
+        try:
+            if int(x.text):
+                value.append(x.text)
+        except:
+            pass
+    for x in data.find_all("td", {"class":"box-color sgp"}):
+        if "," in x.text:
+            tgl.append(x.text)
+        try:
+            if int(x.text):
+                value.append(x.text)
+        except:
+            pass
+    result = {
+        'data1': tgl,
+        'data2': value
+    }
+    
+    return result
+
+def refresh_livedraw_hk():
+    url = "https://tabelpakde.com/live-draw-hk/"
+    r = requests.get(url)
+    data = BeautifulSoup(r.content, "html5lib")
+    value = []
+    tgl = []
+    for x in data.find_all("td", {"class":"box-value"}):
+        va = []
+        for a in x.find_all("span", {"class": "hkball"}):
+            try:
+                if int(a.text):
+                    va.append(a.text)
+            except:
+                pass
+        value
+        if va != []:
+            value.append("".join(va))
+    for x in data.find_all("td", {"class":"box-color hk"}):
+        if "," in x.text:
+            tgl.append(x.text)
+        try:
+            if int(x.text):
+                value.append(x.text)
+        except:
+            pass
+    result = {
+        'data1': tgl,
+        'data2': value
+    }
+    
+    return result
+
+def refresh_prediksi_sgp():
+    url = "https://tabelpakde.com/prediksi-sgp/"
+    r = requests.get(url)
+    data = BeautifulSoup(r.content, "html5lib")
+    value1 = []
+    value2 = []
+    for i,x in enumerate(data.find_all("td", {"class":"column-1"})):
+        if i != 0:
+            value1.append(x.text)
+    for x in data.find_all("td", {"class":"column-2"}):
+        value2.append(x.text)
+    result = {
+        'data1': value1,
+        'data2': value2
+    }
+    while("" in value1):
+        value1.remove("")
+    while("" in value2):
+        value2.remove("")
+    
+    return result
+
+def refresh_prediksi_hk():
+    url = "https://tabelpakde.com/prediksi-hk/"
+    r = requests.get(url)
+    data = BeautifulSoup(r.content, "html5lib")
+    value1 = []
+    value2 = []
+    for i,x in enumerate(data.find_all("td", {"class":"column-1"})):
+        if i != 0:
+            if x != "":
+                value1.append(x.text)
+    for x in data.find_all("td", {"class":"column-2"}):
+        value2.append(x.text)
+    result = {
+        'data1': value1,
+        'data2': value2
+    }
+    while("" in value1):
+        value1.remove("")
+    while("" in value2):
+        value2.remove("")
+    
+    return result
+
+def refresh_prediksi_sdy():
+    url = "https://tabelpakde.com/prediksi-sdy/"
+    r = requests.get(url)
+    data = BeautifulSoup(r.content, "html5lib")
+    value1 = []
+    value2 = []
+    for i,x in enumerate(data.find_all("td", {"class":"column-1"})):
+        if i != 0:
+            if x != "":
+                value1.append(x.text)
+    for x in data.find_all("td", {"class":"column-2"}):
+        value2.append(x.text)
+    result = {
+        'data1': value1,
+        'data2': value2
+    }
+    while("" in value1):
+        value1.remove("")
+    while("" in value2):
+        value2.remove("")
+    
     return result
