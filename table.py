@@ -23,7 +23,6 @@ def refresh_result_sgp():
     result = {}
     for i,x in enumerate(periode):
         result['data_'+str(i)] = [tgl[i], periode[i], numball[i]]
-
     return result
 
 def refresh_result_hk():
@@ -43,34 +42,40 @@ def refresh_result_hk():
     result = {}
     for i,x in enumerate(periode):
         result['data_'+str(i)] = [tgl[i], periode[i], numball[i]]
-
     return result
 
 def refresh_livedraw_sgp():
     url = "https://tabelpakde.com/live-draw-sgp/"
     r = requests.get(url)
     data = BeautifulSoup(r.content, "html5lib")
-    value = []
-    tgl = []
+    value1 = []
+    value2 = []
     for x in data.find_all("td", {"class":"box-value"}):
         try:
             if int(x.text):
-                value.append(x.text)
+                value2.append(x.text)
         except:
             pass
     for x in data.find_all("td", {"class":"box-color sgp"}):
         if "," in x.text:
-            tgl.append(x.text)
+            value1.append(x.text)
         try:
             if int(x.text):
-                value.append(x.text)
+                value2.append(x.text)
         except:
             pass
     result = {
-        'data1': tgl,
-        'data2': value
+        'tanggal1': value1[0],
+        'tanggal2': value1[1],
+        'prize1': value2[0],
+        'prize2': value2[1],
+        'prize3': value2[2],
+        'starter_prize': value2[3:13],
+        'consolation_prize': value2[13:23],
+        '4d_result': value2[23],
+        'winning_number': value2[24:-1],
+        'additional_number': value2[-1]
     }
-    
     return result
 
 def refresh_livedraw_hk():
@@ -79,15 +84,24 @@ def refresh_livedraw_hk():
     data = BeautifulSoup(r.content, "html5lib")
     value = []
     tgl = []
-    for x in data.find_all("td", {"class":"box-value"}):
+    for i,x in enumerate(data.find_all("td", {"class":"box-value"})):
         va = []
-        for a in x.find_all("span", {"class": "hkball"}):
-            try:
-                if int(a.text):
-                    va.append(a.text)
-            except:
-                pass
-        value
+        if i == 0:
+            for a in x.text:
+                try:
+                    if a == "0":
+                        va.append(a)
+                    if int(a):
+                        va.append(a)
+                except:
+                    pass
+        else:
+            for a in x.find_all("span", {"class": "hkball"}):
+                try:
+                    if a.text.isdigit():
+                        va.append(a.text)
+                except:
+                    pass
         if va != []:
             value.append("".join(va))
     for x in data.find_all("td", {"class":"box-color hk"}):
@@ -99,10 +113,13 @@ def refresh_livedraw_hk():
         except:
             pass
     result = {
-        'data1': tgl,
-        'data2': value
+        'tanggal': tgl,
+        'prize1': value[0],
+        'prize2': value[1],
+        'prize3': value[2],
+        'starter_prize': value[3:7],
+        'consolation_prize': value[7:]
     }
-    
     return result
 
 def refresh_prediksi_sgp():
@@ -116,15 +133,13 @@ def refresh_prediksi_sgp():
             value1.append(x.text)
     for x in data.find_all("td", {"class":"column-2"}):
         value2.append(x.text)
-    result = {
-        'data1': value1,
-        'data2': value2
-    }
     while("" in value1):
         value1.remove("")
     while("" in value2):
         value2.remove("")
-    
+    result = {}
+    for i,d in enumerate(value1):
+        result[d] = value2[i]
     return result
 
 def refresh_prediksi_hk():
@@ -135,19 +150,16 @@ def refresh_prediksi_hk():
     value2 = []
     for i,x in enumerate(data.find_all("td", {"class":"column-1"})):
         if i != 0:
-            if x != "":
-                value1.append(x.text)
+            value1.append(x.text)
     for x in data.find_all("td", {"class":"column-2"}):
         value2.append(x.text)
-    result = {
-        'data1': value1,
-        'data2': value2
-    }
     while("" in value1):
         value1.remove("")
     while("" in value2):
         value2.remove("")
-    
+    result = {}
+    for i,d in enumerate(value1):
+        result[d] = value2[i]
     return result
 
 def refresh_prediksi_sdy():
@@ -158,17 +170,14 @@ def refresh_prediksi_sdy():
     value2 = []
     for i,x in enumerate(data.find_all("td", {"class":"column-1"})):
         if i != 0:
-            if x != "":
-                value1.append(x.text)
+            value1.append(x.text)
     for x in data.find_all("td", {"class":"column-2"}):
         value2.append(x.text)
-    result = {
-        'data1': value1,
-        'data2': value2
-    }
     while("" in value1):
         value1.remove("")
     while("" in value2):
         value2.remove("")
-    
+    result = {}
+    for i,d in enumerate(value1):
+        result[d] = value2[i]
     return result
