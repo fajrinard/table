@@ -113,7 +113,7 @@ def refresh_livedraw_hk():
         except:
             pass
     result = {
-        'tanggal': tgl,
+        'tanggal': tgl[0],
         'prize1': value[0],
         'prize2': value[1],
         'prize3': value[2],
