@@ -169,8 +169,7 @@ def refresh_prediksi_sdy():
     value1 = []
     value2 = []
     for i,x in enumerate(data.find_all("td", {"class":"column-1"})):
-        if i != 0:
-            value1.append(x.text)
+        value1.append(x.text)
     for x in data.find_all("td", {"class":"column-2"}):
         value2.append(x.text)
     while("" in value1):
