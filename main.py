@@ -3,7 +3,7 @@ from fastapi.responses import FileResponse,RedirectResponse
 from table import *
 import uvicorn
 
-app = FastAPI(title='Ardx Togel API', version='1.0.0')
+app = FastAPI(title='Ardx Togel API', version='1.0')
 
 msg = "Table scraped by Ard. Made with <3"
 
