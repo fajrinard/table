@@ -44,6 +44,25 @@ def refresh_result_hk():
         result['data_'+str(i)] = [tgl[i], periode[i], numball[i]]
     return result
 
+def refresh_result_macau():
+    url = "https://rgb.team/data-macau/"
+    r = requests.get(url)
+    data = BeautifulSoup(r.content, "html5lib")
+    jam = []
+    rr = []
+    for i,x in enumerate(data.find_all("td")):
+        if ":" in x.text:
+            jam.append(x.text)
+        if i > 7:
+            rr.append(x.text)
+    result = {'jam':[],'table':{}}
+    result['jam'] = jam
+    for i,d in enumerate(rr):
+        result['table']['tr_'+str(i)] = rr[:7]
+        del rr[:7]
+
+    return result
+
 def refresh_livedraw_sgp():
     url = "https://tabelpakde.com/live-draw-sgp/"
     r = requests.get(url)
@@ -179,23 +198,4 @@ def refresh_prediksi_sdy():
     result = {}
     for i,d in enumerate(value1):
         result[d] = value2[i]
-    return result
-
-def refresh_result_macau():
-    url = "https://rgb.team/data-macau/"
-    r = requests.get(url)
-    data = BeautifulSoup(r.content, "html5lib")
-    jam = []
-    rr = []
-    for i,x in enumerate(data.find_all("td")):
-        if ":" in x.text:
-            jam.append(x.text)
-        if i > 7:
-            rr.append(x.text)
-    result = {'jam':[],'table':{}}
-    result['jam'] = jam
-    for i,d in enumerate(rr):
-        result['table']['tr_'+str(i)] = rr[:7]
-        del rr[:7]
-
     return result
