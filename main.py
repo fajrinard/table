@@ -28,6 +28,11 @@ def read_items():
     data = refresh_result_hk()
     return {'result': data, 'message': msg}
 
+@app.get("/table-macau/")
+def read_items():
+    data = refresh_result_macau()
+    return {'result': data, 'message': msg}
+
 @app.get("/live-draw-sgp/")
 def read_items():
     data = refresh_livedraw_sgp()
