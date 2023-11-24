@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import requests, json, time
+import requests, json, time, html, re
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -298,7 +298,31 @@ def refresh_result_chn():
         result['data_'+str(i)] = [{"tanggal": d}, {"result": rr[i]}]
     return result
 
-
+def refresh_result_hariini():
+    url = "https://angkatogelhariini.com/"
+    r = requests.get(url)
+    data = BeautifulSoup(r.content, "html5lib")
+    val = []
+    row = {}
+    for i,x in enumerate(data.find_all("p")):
+        d = re.sub(r'\s+',' ',html.unescape(x.text))
+        if d != "":
+            val.append(d)
+    asd = 0
+    rr = []
+    rep = 0
+    for i,f in enumerate(val):
+        if asd < 5:
+            rr.append(f)
+            asd += 1
+        if asd == 5:
+            rep += 1
+            row["data_"+str(rep)] = rr
+            asd = 0
+            rr = []
+        if rep == 51:
+            break
+    return row
 
 
 
