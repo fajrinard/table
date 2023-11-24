@@ -78,6 +78,11 @@ def read_items():
     data = refresh_prediksi_sdy()
     return {'result': data, 'message': msg}
 
+@app.get("/togel-hari-ini/")
+def read_items():
+    data = refresh_result_hariini()
+    return {'result': data, 'message': msg}
+
 @app.exception_handler(404)
 async def custom_404_handler(_, __):
     return RedirectResponse("/")
