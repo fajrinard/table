@@ -1,5 +1,7 @@
 bs4
-fastapi==0.70.1
+fastapi
 requests
-uvicorn==0.16.0
+uvicorn
 html5lib
+urllib3==1.26.6
+selenium
