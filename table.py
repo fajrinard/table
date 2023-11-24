@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
-import requests
+import requests, json, time
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 def refresh_result_sgp():
     url = "https://tabelpakde.com/"
@@ -199,3 +201,110 @@ def refresh_prediksi_sdy():
     for i,d in enumerate(value1):
         result[d] = value2[i]
     return result
+
+def refresh_result_sdy():
+    prd = open("sdy/data_sdy.json")
+    periodes = json.load(prd)
+    periode = periodes['periode']
+    prd.close()
+    url = "http://www.sidney4dpools.com/"
+    r = requests.get(url)
+    data = BeautifulSoup(r.content, "html5lib")
+    date = []
+    rr = []
+    for i,x in enumerate(data.find_all("table", {"class": "stripeMe"})):
+        for a in x.find_all("td"):
+            dd = []
+            for d in a.find_all("strong"):
+                if "-" in d.text:
+                    date.append(d.text)
+            for d in a.find_all("img"):
+                dd.append(d['src'][-5])
+            if dd != []:
+                rr.append("".join(dd))
+    result = {}
+    for i,d in enumerate(date):
+        result['data_'+str(i)] = [{"tanggal": d}, {"periode": str(periode)}, {"result": rr[i]}]
+        periode-=1
+    return result
+
+def refresh_result_tw():
+    url = "http://www.tw4dpools.com/home.php"
+    op = webdriver.ChromeOptions()
+    op.add_argument('headless')
+    driver = webdriver.Chrome(options=op)
+    driver.get(url)
+    drive = driver.find_elements(By.CSS_SELECTOR, "tr.results_row td div div")
+    rr = []
+    for d in drive:
+        if d.text != "":
+            if "\n" in d.text:
+                x = d.text.replace("\n","")
+                rr.append(x)
+    datdr = driver.find_elements(By.CSS_SELECTOR, "tr.results_row td")
+    date = []
+    for x in datdr:
+        if "," in x.text:
+            date.append(x.text)
+    result = {}
+    for i,d in enumerate(rr):
+        result['data_'+str(i)] = [{"tanggal": date[i]}, {"result": d}]
+    return result
+    
+def refresh_result_cam():
+    url = "https://magnumcambodia.com/apps/results?first=first"
+    op = webdriver.ChromeOptions()
+    op.add_argument('headless')
+    driver = webdriver.Chrome(options=op)
+    driver.get(url)
+    drive = driver.find_elements(By.CSS_SELECTOR, "b")
+    date = []
+    rr = []
+    for x in drive:
+        if "-" in x.text:
+            date.append(x.text)
+        asd = x.find_elements(By.CSS_SELECTOR, "img")
+        dt = []
+        for d in asd:
+            ss = d.get_attribute("src")
+            if "/bola/" in ss:
+                dt.append(ss[-19])
+        if dt != []:
+            rr.append("".join(dt))
+    result = {}
+    for i,d in enumerate(date):
+        result['data_'+str(i)] = [{"tanggal": d}, {"result": rr[i]}]
+    return result
+    
+def refresh_result_chn():
+    url = "https://www.china4dlottery.com/"
+    op = webdriver.ChromeOptions()
+    op.add_argument('headless')
+    driver = webdriver.Chrome(options=op)
+    driver.get(url)
+    drive = driver.find_elements(By.CSS_SELECTOR, "div.blog_wrap")
+    date = []
+    rr = []
+    for x in drive:
+        imgs = []
+        date.append(x.find_element(By.CSS_SELECTOR, "div.post_title h2 a").text[17:])
+        for img in x.find_elements(By.CSS_SELECTOR, "img.wp-smiley"):
+            if img.get_attribute("alt") != ";logo4d;":
+                imgs.append(img.get_attribute("src")[-5])
+        if imgs != []:
+            rr.append("".join(imgs))
+    result = {}
+    for i,d in enumerate(date):
+        result['data_'+str(i)] = [{"tanggal": d}, {"result": rr[i]}]
+    return result
+
+
+
+
+
+
+
+
+
+
+
