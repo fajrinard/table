@@ -304,27 +304,26 @@ def refresh_result_hariini():
     data = BeautifulSoup(r.content, "html5lib")
     val = []
     row = {}
-    for i,x in enumerate(data.find_all("p")):
+    for x in data.find_all("p"):
         d = re.sub(r'\s+',' ',html.unescape(x.text))
         if d != "":
             val.append(d)
     asd = 0
     rr = []
     rep = 0
-    for i,f in enumerate(val):
+    for f in val:
+        asd += 1
         if asd < 5:
             rr.append(f)
-            asd += 1
         if asd == 5:
             rep += 1
-            row["data_"+str(rep)] = rr
+            if rep > 1:
+                row["data_"+str(rep-1)] = rr
             asd = 0
             rr = []
         if rep == 51:
             break
     return row
-
-
 
 
 
