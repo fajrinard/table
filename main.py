@@ -3,7 +3,7 @@ from fastapi.responses import FileResponse,RedirectResponse
 from table import *
 import uvicorn, json
 
-app = FastAPI(title='Ardx Togel API', version='1.0.0')
+app = FastAPI(title='Ardx Togel API', version='1.3')
 
 msg = "Table scraped by Ard. coded with <3"
 
@@ -17,6 +17,11 @@ def read_root():
         'message': "Welcome to Ardx Togel API"
     }
     return data
+
+@app.get("/table-cam/")
+def read_items():
+    data = refresh_result_cam()
+    return {'result': data, 'message': msg}
 
 @app.get("/table-sgp/")
 def read_items():
@@ -38,9 +43,9 @@ def read_items():
     data = refresh_result_tw()
     return {'result': data, 'message': msg}
 
-@app.get("/table-cam/")
+@app.get("/table-chn/")
 def read_items():
-    data = refresh_result_cam()
+    data = refresh_result_chn()
     return {'result': data, 'message': msg}
 
 @app.get("/table-macau/")
